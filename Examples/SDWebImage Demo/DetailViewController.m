@@ -12,7 +12,7 @@
 @interface DetailViewController ()
 
 @property (strong, nonatomic) IBOutlet SDAnimatedImageView *imageView;
-
+@property (strong, nonatomic) UIImageView *sysImageView;
 @end
 
 @implementation DetailViewController
@@ -21,6 +21,8 @@
     if (!self.imageView.sd_imageIndicator) {
         self.imageView.sd_imageIndicator = SDWebImageProgressIndicator.defaultIndicator;
     }
+#warning -Use UIImageView to load image (hit the SDAnimatedImage) form memory cache , UIImageView can not play animation with SDAnimatedImage.
+    //fix: SDWebImageManager.m  line:134
     [self.imageView sd_setImageWithURL:self.imageURL
                       placeholderImage:nil
                                options:SDWebImageProgressiveLoad];
@@ -28,9 +30,24 @@
     self.imageView.animationRepeatCount = 0;
 }
 
+- (void)configureSysView {
+    self.sysImageView = [[UIImageView alloc]initWithFrame:self.view.bounds];
+    self.sysImageView.contentMode = UIViewContentModeScaleAspectFit;
+    [self.view addSubview:self.sysImageView];
+    if (!self.sysImageView.sd_imageIndicator) {
+        self.sysImageView.sd_imageIndicator = SDWebImageProgressIndicator.defaultIndicator;
+    }
+    [self.sysImageView sd_setImageWithURL:self.imageURL
+                      placeholderImage:nil
+                               options:SDWebImageProgressiveLoad];
+    NSLog(@"current detail url extension: %@",self.imageURL.pathExtension);
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self configureView];
+//    [self configureView];
+#warning -For this issue
+    [self configureSysView];
     self.navigationItem.rightBarButtonItem = [UIBarButtonItem.alloc initWithTitle:@"Toggle Animation"
                                                                             style:UIBarButtonItemStylePlain
                                                                            target:self

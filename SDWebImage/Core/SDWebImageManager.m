@@ -129,6 +129,14 @@ static id<SDImageLoader> _defaultImageLoader;
         key = url.absoluteString;
     }
     
+    // AnimatedImageClass Key Appending
+    /*
+    Class desiredImageClass = context[SDWebImageContextAnimatedImageClass];
+    if (desiredImageClass != nil) {
+        key = SDTransformedKeyForKey(key, NSStringFromClass(desiredImageClass));
+    }
+     */
+    
     // Thumbnail Key Appending
     NSValue *thumbnailSizeValue = context[SDWebImageContextImageThumbnailPixelSize];
     if (thumbnailSizeValue != nil) {

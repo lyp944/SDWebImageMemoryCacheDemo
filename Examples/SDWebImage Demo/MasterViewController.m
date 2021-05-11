@@ -108,13 +108,15 @@
         cell.customImageView.sd_imageTransition = SDWebImageTransition.fadeTransition;
         cell.customImageView.sd_imageIndicator = SDWebImageActivityIndicator.grayIndicator;
     }
-    
-    cell.customTextLabel.text = [NSString stringWithFormat:@"Image #%ld", (long)indexPath.row];
+    NSURL *url = [NSURL URLWithString:self.objects[indexPath.row]];
+    cell.customTextLabel.text = [NSString stringWithFormat:@"Image #%.2ld     ext: %@",(long)indexPath.row,url.pathExtension];
     __weak SDAnimatedImageView *imageView = cell.customImageView;
-    [imageView sd_setImageWithURL:[NSURL URLWithString:self.objects[indexPath.row]]
+#warning -For this issue
+#warning -Delete SDWebImageContextImageThumbnailPixelSize ,make detailViewController to hit the memory cache
+    [imageView sd_setImageWithURL:url
                  placeholderImage:placeholderImage
                           options:0
-                          context:@{SDWebImageContextImageThumbnailPixelSize : @(CGSizeMake(180, 120))}
+                          context:nil/*@{SDWebImageContextImageThumbnailPixelSize : @(CGSizeMake(180, 120))}*/
                          progress:nil
                         completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
         SDWebImageCombinedOperation *operation = [imageView sd_imageLoadOperationForKey:imageView.sd_latestOperationKey];
